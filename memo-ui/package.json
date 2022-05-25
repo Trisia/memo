@@ -2,7 +2,7 @@
   "name": "memo-ui",
   "private": true,
   "version": "1.0.0",
-  "description":"Memo笔记系统前端UI"
+  "description":"Memo笔记系统前端UI",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
