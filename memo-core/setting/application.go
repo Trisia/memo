@@ -18,11 +18,15 @@ type Database struct {
 // 无法找到配置文件时候的缺省配置
 func newDefaultConfig() *Application {
 	return &Application{
+		//Database: Database{
+		//	Dsn:   "user:pass@tcp(127.0.0.1:3306)/memo?charset=utf8mb4&parseTime=True&loc=Local",
+		//	Type: "mysql",
+		//},
 		Database: Database{
 			Dsn:  filepath.Join(LocExe, "memo.db"),
 			Type: "sqlite",
 		},
-		Port:  7743,
+		Port:  7532,
 		Debug: false,
 	}
 }

@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS users;
 CREATE TABLE users
 (
-    id         INTEGER PRIMARY KEY,
+    id         BIGINT PRIMARY KEY,
     created_at DATETIME,
     updated_at DATETIME,
     username   VARCHAR(64), 
@@ -14,7 +14,7 @@ CREATE TABLE users
 DROP TABLE IF EXISTS documents;
 CREATE TABLE documents
 (
-    id         INTEGER PRIMARY KEY,
+    id         BIGINT PRIMARY KEY,
     created_at DATETIME,
     updated_at DATETIME,
     creator    INT, 
@@ -26,7 +26,7 @@ CREATE TABLE documents
 DROP TABLE IF EXISTS tags;
 CREATE TABLE tags
 (
-    id         INTEGER PRIMARY KEY,
+    id         BIGINT PRIMARY KEY,
     created_at DATETIME,
     updated_at DATETIME,
     creator    INT, 
@@ -37,7 +37,7 @@ CREATE TABLE tags
 DROP TABLE IF EXISTS doc_tags;
 CREATE TABLE doc_tags
 (
-    id         INTEGER PRIMARY KEY,
+    id         BIGINT PRIMARY KEY,
     created_at DATETIME,
     updated_at DATETIME,
     doc_id     INT, 
