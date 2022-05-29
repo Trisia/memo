@@ -3,6 +3,7 @@ package repo
 import (
 	"fmt"
 	"github.com/glebarez/sqlite"
+	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"memo-core/setting"
@@ -39,6 +40,7 @@ func Init(config setting.Database) error {
 	sqlDB.SetMaxOpenConns(128)
 	// SetConnMaxLifetime 设置了连接可复用的最大时间。
 	sqlDB.SetConnMaxLifetime(time.Hour)
+	zap.L().Info(fmt.Sprintf("数据库 [%s] 连接成功", config.Type))
 	// 创建数据库表
 	return Migrate(false)
 }

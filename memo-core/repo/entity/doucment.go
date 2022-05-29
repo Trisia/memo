@@ -5,19 +5,18 @@ import (
 	"time"
 )
 
-// User 用户
-type User struct {
+// Document 文章
+type Document struct {
 	ID        uint      `gorm:"autoIncrement,type:bigint" json:"id"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
-	Username  string    `gorm:"type:varchar(64)" json:"username"`
-	Email     string    `gorm:"type:varchar(256)" json:"email"`
-	Password  string    `gorm:"type:varchar(256)" json:"-"`
-	Salt      string    `gorm:"type:varchar(256)" json:"-"`
+	Creator   uint      `gorm:"type:bigint" json:"creator"`
+	Title     string    `gorm:"type:varchar(256)" json:"title"`
+	Content   string    `gorm:"type:text" json:"content"`
 }
 
-func (c *User) MarshalJSON() ([]byte, error) {
-	type Alias User
+func (c *Document) MarshalJSON() ([]byte, error) {
+	type Alias Document
 	return json.Marshal(&struct {
 		*Alias
 		CreatedAt DateTime `json:"createdAt"`

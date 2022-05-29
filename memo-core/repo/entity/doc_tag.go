@@ -5,19 +5,17 @@ import (
 	"time"
 )
 
-// User 用户
-type User struct {
+// DocTag 文章的标签关系表
+type DocTag struct {
 	ID        uint      `gorm:"autoIncrement,type:bigint" json:"id"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
-	Username  string    `gorm:"type:varchar(64)" json:"username"`
-	Email     string    `gorm:"type:varchar(256)" json:"email"`
-	Password  string    `gorm:"type:varchar(256)" json:"-"`
-	Salt      string    `gorm:"type:varchar(256)" json:"-"`
+	DocId     uint      `gorm:"type:bigint" json:"docId"`
+	TagId     uint      `gorm:"type:bigint" json:"tagId"`
 }
 
-func (c *User) MarshalJSON() ([]byte, error) {
-	type Alias User
+func (c *DocTag) MarshalJSON() ([]byte, error) {
+	type Alias DocTag
 	return json.Marshal(&struct {
 		*Alias
 		CreatedAt DateTime `json:"createdAt"`

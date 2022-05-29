@@ -8,6 +8,7 @@ CREATE TABLE users
     email      VARCHAR(256), 
     `password` VARCHAR(256), 
     salt       VARCHAR(256)
+
 );
 
 
@@ -17,7 +18,7 @@ CREATE TABLE documents
     id         BIGINT PRIMARY KEY,
     created_at DATETIME,
     updated_at DATETIME,
-    creator    INT, 
+    creator    BIGINT, 
     title      VARCHAR(256), 
     content    TEXT
 );
@@ -29,7 +30,7 @@ CREATE TABLE tags
     id         BIGINT PRIMARY KEY,
     created_at DATETIME,
     updated_at DATETIME,
-    creator    INT, 
+    creator    BIGINT, 
     `value`    VARCHAR(512)
 );
 
@@ -40,7 +41,7 @@ CREATE TABLE doc_tags
     id         BIGINT PRIMARY KEY,
     created_at DATETIME,
     updated_at DATETIME,
-    doc_id     INT, 
-    tag_id     INT
+    doc_id     BIGINT, 
+    tag_id     BIGINT
 );
 
