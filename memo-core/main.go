@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"memo-core/controller"
 	"memo-core/repo"
@@ -20,10 +18,9 @@ func main() {
 	}
 
 	zap.L().Info("启动memo-core服务", zap.Int("port", setting.Config.Port))
-	server := gin.Default()
-	controller.RouteMapping(server)
-	err = server.Run(fmt.Sprintf(":%d", setting.Config.Port))
+	server := controller.NewServer()
+	err = server.ListenAndServe()
 	if err != nil {
-		zap.L().Fatal("服务启动异常", zap.Error(err))
+		zap.L().Fatal("HTTP服务异常终止", zap.Error(err))
 	}
 }
