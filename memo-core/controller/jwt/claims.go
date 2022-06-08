@@ -20,7 +20,7 @@ const (
 // Claims RFC 7519 JWT Claims
 type Claims struct {
 	Sub string `json:"sub"` // 用户名
-	Typ int64  `json:"typ"` // 用户类型 0 - 普通用户； 1 - 管理员
+	Typ int    `json:"typ"` // 用户类型 0 - 普通用户； 1 - 管理员
 	Iat int64  `json:"iat"` // 生效时间，Unix 毫秒数
 	Exp int64  `json:"exp"` // 过期时间，Unix 毫秒数
 }

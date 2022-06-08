@@ -8,12 +8,15 @@ import (
 	"memo-core/repo"
 	"memo-core/repo/entity"
 	"net/mail"
+	"strconv"
 )
 
 func NewUserController(r gin.IRouter) *UserController {
 	res := &UserController{}
 	base := r.Group("user")
-	base.POST("create", res.create)
+	// 创建用户
+	base.POST("register", res.register)
+	base.DELETE("", res.delete)
 	return res
 }
 
@@ -22,8 +25,8 @@ type UserController struct {
 }
 
 /**
-@api {GET} /user/create 创建用户
-@apiDescription 创建用户。
+@api {POST} /user/register 注册用户
+@apiDescription 注册用户。
 @apiName UserCreate
 @apiGroup User
 
@@ -43,9 +46,17 @@ type UserController struct {
 @apiSuccess {String} email 邮箱
 
 @apiSuccessExample {json} 成功响应
-
+{
+    "id": 6,
+    "username": "user3",
+    "email": "example@email211.com",
+    "password": "",
+    "typ": 0,
+    "createdAt": "2022-06-08 22:24:57",
+    "updatedAt": "2022-06-08 22:24:57"
+}
 */
-func (c *UserController) create(ctx *gin.Context) {
+func (c *UserController) register(ctx *gin.Context) {
 	var param entity.User
 	if err := ctx.ShouldBindJSON(&param); err != nil {
 		ErrIllegal(ctx, "无法解析参数")
@@ -88,4 +99,31 @@ func (c *UserController) create(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(200, &param)
+}
+
+/**
+@api {DELETE} /user 删除用户
+@apiDescription 删除用户。
+@apiName UserDelete
+@apiGroup User
+
+@apiParam {Integer} id 记录ID
+
+
+@apiParamExample {HTTP} 请求示例
+DELETE /user?id=1
+
+@apiSuccessExample {HTTP} 成功响应
+HTTP/1.1 200 OK
+*/
+func (c *UserController) delete(ctx *gin.Context) {
+	id, _ := strconv.Atoi(ctx.Query("id"))
+	if id <= 0 {
+		ErrIllegal(ctx, "记录ID错误")
+		return
+	}
+	if err := repo.DB.Delete(&entity.User{}, id).Error; err != nil {
+		ErrSys(ctx, err)
+		return
+	}
 }

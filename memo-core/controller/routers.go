@@ -6,5 +6,6 @@ import (
 
 // routeMapping HTTP路由注册
 func routeMapping(r gin.IRouter) {
+	NewAuthController(r)
 	NewUserController(r)
 }
