@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"memo-core/controller/jwt"
 	"net/http"
+	"strconv"
 )
 
 // 验证JWT有效性
@@ -30,7 +31,8 @@ func validateJWT(c *gin.Context) {
 	}
 
 	// 设置上下文
-	c.Set("username", claims.Sub)
+	userId, _ := strconv.Atoi(claims.Sub)
+	c.Set("userId", userId)
 	c.Set("typ", claims.Typ)
 }
 

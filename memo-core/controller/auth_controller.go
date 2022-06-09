@@ -3,6 +3,7 @@ package controller
 import (
 	"bytes"
 	"encoding/hex"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/tjfoc/gmsm/sm3"
 	"gorm.io/gorm"
@@ -77,7 +78,7 @@ func (c *AuthController) auth(ctx *gin.Context) {
 	hash.Write(salt)
 	if bytes.Equal(hash.Sum(nil), password) {
 		// 创建token
-		token := jwt.Create(&jwt.Claims{Typ: user.Typ, Sub: user.Username}, jwtKey)
+		token := jwt.Create(&jwt.Claims{Typ: user.Typ, Sub: fmt.Sprintf("%d", user.ID)}, jwtKey)
 		ctx.JSON(200, token)
 	} else {
 		ErrIllegal(ctx, "用户名或口令错误")
