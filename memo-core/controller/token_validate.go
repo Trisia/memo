@@ -32,7 +32,7 @@ func validateJWT(c *gin.Context) {
 
 	// 设置上下文
 	userId, _ := strconv.Atoi(claims.Sub)
-	c.Set("userId", userId)
+	c.Set("userId", uint(userId))
 	c.Set("typ", claims.Typ)
 }
 
