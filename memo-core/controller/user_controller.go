@@ -44,6 +44,8 @@ type UserController struct {
 @apiSuccess {Integer} id 记录ID
 @apiSuccess {String} username 用户名
 @apiSuccess {String} email 邮箱
+@apiSuccess {String} createdAt 创建时间，YYYY-MM-DD HH:mm:ss
+@apiSuccess {String} updatedAt 更新时间，YYYY-MM-DD HH:mm:ss
 
 @apiSuccessExample {json} 成功响应
 {

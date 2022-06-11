@@ -6,6 +6,7 @@ import (
 	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"memo-core/setting"
 	"strings"
 	"time"
@@ -37,7 +38,13 @@ func Init(config setting.Database) error {
 		return fmt.Errorf("未知的数据库系统类型 [%s]", config.Type)
 	}
 	var err error
-	DB, err = gorm.Open(dialector, &gorm.Config{DisableForeignKeyConstraintWhenMigrating: true})
+	opts := &gorm.Config{DisableForeignKeyConstraintWhenMigrating: true}
+	if setting.Config.Debug {
+		// 打印DEBUG日志
+		opts.Logger = logger.Default.LogMode(logger.Info)
+	}
+
+	DB, err = gorm.Open(dialector, opts)
 	if err != nil {
 		return fmt.Errorf("无法连接数据库, %v", err)
 	}

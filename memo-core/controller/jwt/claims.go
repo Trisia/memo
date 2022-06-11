@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/tjfoc/gmsm/sm3"
+	"memo-core/setting"
 	"strings"
 	"time"
 )
@@ -77,6 +78,11 @@ func Verify(token string, key []byte) *Claims {
 	hash := hmac.New(sm3.New, key)
 	hash.Write(plaintext)
 	expect := hash.Sum(nil)
+
+	// TODO: DEBUG 忽略校验
+	if setting.Config.Debug {
+		return &c
+	}
 
 	if !bytes.Equal(expect, actual) {
 		return nil

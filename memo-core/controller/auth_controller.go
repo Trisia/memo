@@ -42,7 +42,7 @@ type AuthController struct {
 @apiSuccess {String} Body token
 
 @apiSuccessExample {String} 成功响应
-"eyJhbGciOiJITUFDLVNNMyIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0IiwidHlwIjowLCJpYXQiOjE2NTQ2OTk3MjExMTAsImV4cCI6MTY1NDcyODUyMTExMH0.OIva_EVx6Vy0PtJxmXxspM85M5QboDrU8T_BfC4meHY"
+eyJhbGciOiJITUFDLVNNMyIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0IiwidHlwIjowLCJpYXQiOjE2NTQ2OTk3MjExMTAsImV4cCI6MTY1NDcyODUyMTExMH0.OIva_EVx6Vy0PtJxmXxspM85M5QboDrU8T_BfC4meHY
 
 @apiErrorExample {http} 失败
 HTTP/1.1 400
@@ -79,7 +79,7 @@ func (c *AuthController) auth(ctx *gin.Context) {
 	if bytes.Equal(hash.Sum(nil), password) {
 		// 创建token
 		token := jwt.Create(&jwt.Claims{Typ: user.Typ, Sub: fmt.Sprintf("%d", user.ID)}, jwtKey)
-		ctx.JSON(200, token)
+		ctx.String(200, token)
 	} else {
 		ErrIllegal(ctx, "用户名或口令错误")
 		return
