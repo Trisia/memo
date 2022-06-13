@@ -7,6 +7,11 @@ import (
 	"strconv"
 )
 
+var allowPath = map[string]uint8{
+	"/api/user/register": 1,
+	"/api/auth":          1,
+}
+
 // 验证JWT有效性
 func validateJWT(c *gin.Context) {
 	// 匿名接口
@@ -34,11 +39,6 @@ func validateJWT(c *gin.Context) {
 	userId, _ := strconv.Atoi(claims.Sub)
 	c.Set("userId", uint(userId))
 	c.Set("typ", claims.Typ)
-}
-
-var allowPath = map[string]uint8{
-	"/user/register": 1,
-	"/auth":          1,
 }
 
 // 检查路由是否是匿名

@@ -29,7 +29,7 @@ func NewDocController(r gin.IRouter) *DocController {
 }
 
 /**
-@api {POST} /doc 保存文档
+@api {POST} /api/doc 保存文档
 @apiDescription 保存文档，如果ID为空则为创建，否则为更新。
 @apiName DocSave
 @apiGroup Doc
@@ -87,7 +87,7 @@ func (c *DocController) save(ctx *gin.Context) {
 }
 
 /**
-@api {DELETE} /doc 删除文档
+@api {DELETE} /api/doc 删除文档
 @apiDescription 通过用户ID删除文档。
 @apiName DocDelete
 @apiGroup Doc
@@ -122,7 +122,7 @@ func (c *DocController) delete(ctx *gin.Context) {
 }
 
 /**
-@api {GET} /doc/:id 获取文档
+@api {GET} /api/doc/:id 获取文档
 @apiDescription 通过文档ID获取文档
 @apiName DocGet
 @apiGroup Doc
@@ -176,7 +176,7 @@ func (c *DocController) get(ctx *gin.Context) {
 }
 
 /**
-@api {GET} /doc/search 查询文档
+@api {GET} /api/doc/search 查询文档
 @apiDescription 批量查询文档信息
 @apiName DocSearch
 @apiGroup Doc

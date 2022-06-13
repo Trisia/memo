@@ -25,7 +25,7 @@ type AuthController struct {
 }
 
 /**
-@api {POST} /auth 认证
+@api {POST} /api/auth 认证
 @apiDescription 用户认证获取Token。
 @apiName Auth
 @apiGroup Auth

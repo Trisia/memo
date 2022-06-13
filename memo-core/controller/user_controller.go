@@ -25,7 +25,7 @@ type UserController struct {
 }
 
 /**
-@api {POST} /user/register 注册用户
+@api {POST} /api/user/register 注册用户
 @apiDescription 注册用户。
 @apiName UserCreate
 @apiGroup User
@@ -104,7 +104,7 @@ func (c *UserController) register(ctx *gin.Context) {
 }
 
 /**
-@api {DELETE} /user 删除用户
+@api {DELETE} /api/user 删除用户
 @apiDescription 删除用户。
 @apiName UserDelete
 @apiGroup User
