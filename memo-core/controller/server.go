@@ -22,6 +22,7 @@ func NewServer() *http.Server {
 		Recovery(),
 		validateJWT,
 	)
+	r.MaxMultipartMemory = 64 << 20 // 64 MiB
 	// 注册路路由
 	routeMapping(r)
 

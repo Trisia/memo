@@ -1,0 +1,1 @@
+apidoc -i controller/ -d~o target/MemoAPI

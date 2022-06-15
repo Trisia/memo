@@ -1,0 +1,8 @@
+{
+  "name": "Memo API Document",
+  "version": "1.0.0",
+  "description": "Memo Markdown base system application interface document",
+  "apidoc": {
+    "title": "Memo API Doc"
+  }
+}

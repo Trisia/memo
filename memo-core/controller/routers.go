@@ -15,5 +15,6 @@ func routeMapping(r gin.IRouter) {
 	NewAuthController(r)
 	NewUserController(r)
 	NewDocController(r)
+	NewDocAssetController(r)
 	NewTagController(r)
 }

@@ -45,6 +45,11 @@ func ErrIllegal(c *gin.Context, hit string) {
 	_, _ = c.Writer.WriteString(hit)
 }
 
+// ErrNotFount 不存在
+func ErrNotFount(c *gin.Context) {
+	c.AbortWithStatus(http.StatusNotFound)
+}
+
 // ErrAuth 认证错误,不提供任何参数和响应体，不记录日志
 func ErrAuth(c *gin.Context) {
 	c.AbortWithStatus(http.StatusUnauthorized)

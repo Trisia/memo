@@ -20,8 +20,8 @@ type TagController struct {
 /**
 @api {POST} /api/tag 创建标签
 @apiDescription 创建新的标签，同一用户标签不可重复。
-@apiName DocSave
-@apiGroup Doc
+@apiName TagCreate
+@apiGroup Tag
 
 @apiParam {String} body 标签，不能重复
 
@@ -47,6 +47,7 @@ func (c *TagController) create(ctx *gin.Context) {
 		ErrIllegal(ctx, "标签不能为空")
 		return
 	}
+
 	value := string(b)
 	userId := ctx.GetUint("userId")
 	var cnt int64

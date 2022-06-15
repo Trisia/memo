@@ -25,6 +25,7 @@ func NewDocController(r gin.IRouter) *DocController {
 	base.GET(":id", res.get)
 	// 查询文档
 	base.GET("search", res.search)
+
 	return res
 }
 
