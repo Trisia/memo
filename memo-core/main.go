@@ -3,6 +3,7 @@ package main
 import (
 	"go.uber.org/zap"
 	"memo-core/controller"
+	_ "memo-core/objstore/filesys/driver"
 	"memo-core/repo"
 	"memo-core/setting"
 )
