@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 var errInvalidWrite = fmt.Errorf("invalid write result")
@@ -21,18 +22,20 @@ func NewFileSystemBaseOSS() *FileSystemBaseOSS {
 	return &FileSystemBaseOSS{base: base}
 }
 
-func (f *FileSystemBaseOSS) Put(filename string, in io.Reader) (string, int64, error) {
+func (f *FileSystemBaseOSS) Put(docId, filename string, in io.Reader) (hashName string, written int64, err error) {
 	var buf [4096]byte
 	if in == nil {
 		return "", 0, nil
 	}
+	_ = os.Mkdir(filepath.Join(f.base, docId), os.ModePerm)
+
 	dst, err := os.CreateTemp("", "doc-*.asset")
 	if err != nil {
 		return "", 0, err
 	}
 	defer os.Remove(dst.Name())
+
 	hash := sm3.New()
-	var written int64 = 0
 	for {
 		nr, er := in.Read(buf[:])
 		if nr > 0 {
@@ -61,29 +64,61 @@ func (f *FileSystemBaseOSS) Put(filename string, in io.Reader) (string, int64, e
 			break
 		}
 	}
+	if err != nil {
+		return "", 0, err
+	}
+	err = dst.Close()
+	if err != nil {
+		return "", 0, err
+	}
+
 	sum := hash.Sum(nil)
 	// 文件名为： Hash值.后缀
-	loc := fmt.Sprintf("%02x%s", sum, filepath.Ext(filename))
-	// 移动文件
-	err = os.Rename(filepath.Join(f.base, loc), dst.Name())
-	return loc, written, err
+	hashName = fmt.Sprintf("%02x%s", sum, strings.ToLower(filepath.Ext(filename)))
+
+	tmp, err := os.Open(dst.Name())
+	if err != nil {
+		return "", 0, err
+	}
+	defer tmp.Close()
+	target, err := os.Create(filepath.Join(f.base, docId, hashName))
+	if err != nil {
+		return "", 0, err
+	}
+	defer target.Close()
+
+	written, err = io.Copy(target, tmp)
+
+	return
 }
 
-func (f *FileSystemBaseOSS) Get(loc string, out io.Writer) (int64, error) {
-	if out == nil || loc == "" {
+func (f *FileSystemBaseOSS) Get(docId, hashName string, out io.Writer) (written int64, err error) {
+	if out == nil || hashName == "" {
 		return 0, nil
 	}
-	src, err := os.Open(filepath.Join(f.base, loc))
+	p := filepath.Join(f.base, docId, hashName)
+	if _, err = os.Stat(p); err != nil {
+		return 0, err
+	}
+
+	src, err := os.Open(p)
 	if err != nil {
 		return 0, err
 	}
+	defer src.Close()
 	return io.Copy(out, src)
 }
 
-func (f *FileSystemBaseOSS) Del(loc string) error {
-	if loc == "" {
+func (f *FileSystemBaseOSS) Del(docId, hashName string) error {
+	if hashName == "" {
 		return nil
 	}
-	filepath.Join(f.base, loc)
-	return os.Remove(loc)
+	return os.Remove(filepath.Join(f.base, docId, hashName))
+}
+
+func (f FileSystemBaseOSS) DelDoc(docId string) error {
+	if docId == "" {
+		return nil
+	}
+	return os.RemoveAll(filepath.Join(f.base, docId))
 }

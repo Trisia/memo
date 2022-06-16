@@ -1,8 +1,12 @@
 package controller
 
 import (
+	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"memo-core/objstore"
+	"net/http"
+	"os"
 	"strconv"
 )
 
@@ -10,7 +14,7 @@ func NewDocAssetController(r gin.IRouter) *DocAssetController {
 	res := &DocAssetController{}
 	base := r.Group("doc")
 	// 上传文档资源
-	base.PUT(":id/asset", res.putAsset)
+	base.POST(":id/asset", res.putAsset)
 	// 下载文档资源
 	base.GET(":id/asset/:filename", res.getAsset)
 	return res
@@ -48,11 +52,23 @@ func (c *DocAssetController) putAsset(ctx *gin.Context) {
 		ErrIllegal(ctx, "文档ID错误")
 		return
 	}
-	file, _ := ctx.FormFile("file")
-
-	fmt.Println(">> upload:", file.Filename)
-
-	// TODO
+	file, err := ctx.FormFile("file")
+	if err != nil {
+		ErrIllegal(ctx, "文件上传请求格式错误或文件为空")
+		return
+	}
+	src, err := file.Open()
+	if err != nil {
+		ErrSys(ctx, err)
+		return
+	}
+	defer src.Close()
+	hashName, _, err := objstore.Repo.Put(idStr, file.Filename, src)
+	if err != nil {
+		ErrSys(ctx, err)
+		return
+	}
+	ctx.String(200, hashName)
 }
 
 /**
@@ -80,6 +96,17 @@ func (c *DocAssetController) getAsset(ctx *gin.Context) {
 		ErrNotFount(ctx)
 		return
 	}
-	// TODO
-
+	ctx.Writer.WriteHeader(http.StatusOK)
+	ctx.Header("Content-Disposition", fmt.Sprintf("attachment; filename=%s", filename))
+	ctx.Header("Content-Type", "application/octet-stream")
+	_, err := objstore.Repo.Get(idStr, filename, ctx.Writer)
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			ErrNotFount(ctx)
+			return
+		} else {
+			ErrSys(ctx, err)
+			return
+		}
+	}
 }
