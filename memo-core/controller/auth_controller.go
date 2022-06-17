@@ -78,7 +78,7 @@ func (c *AuthController) auth(ctx *gin.Context) {
 	hash.Write(salt)
 	if bytes.Equal(hash.Sum(nil), password) {
 		// 创建token
-		token := jwt.Create(&jwt.Claims{Typ: user.Typ, Sub: fmt.Sprintf("%d", user.ID)}, jwtKey)
+		token := jwt.New(&jwt.Claims{Typ: user.Typ, Sub: fmt.Sprintf("%d", user.ID)})
 		ctx.String(200, token)
 	} else {
 		ErrIllegal(ctx, "用户名或口令错误")

@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"github.com/gin-gonic/gin"
 	"github.com/tjfoc/gmsm/sm3"
+	"memo-core/controller/midd"
 	"memo-core/repo"
 	"memo-core/repo/entity"
 	"net/mail"
@@ -16,7 +17,7 @@ func NewUserController(r gin.IRouter) *UserController {
 	base := r.Group("user")
 	// 创建用户
 	base.POST("register", res.register)
-	base.DELETE("", res.delete)
+	base.DELETE("", midd.AdminOnly, res.delete)
 	return res
 }
 

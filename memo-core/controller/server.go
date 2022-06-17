@@ -1,26 +1,18 @@
 package controller
 
 import (
-	"crypto/rand"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"memo-core/controller/midd"
 	"memo-core/setting"
 	"net/http"
 )
-
-// JWT的HMAC密钥
-var jwtKey = make([]byte, 16)
-
-func init() {
-	_, _ = rand.Reader.Read(jwtKey)
-
-}
 
 func NewServer() *http.Server {
 	r := gin.Default()
 	r.Use(
 		Recovery(),
-		validateJWT,
+		midd.ValidateJWT,
 	)
 	r.MaxMultipartMemory = 64 << 20 // 64 MiB
 	// 注册路路由

@@ -21,7 +21,7 @@ const (
 // Claims RFC 7519 JWT Claims
 type Claims struct {
 	Sub string `json:"sub"` // 用户名
-	Typ int    `json:"typ"` // 用户类型 0 - 普通用户； 1 - 管理员
+	Typ int    `json:"typ"` // 用户类型 0 - 普通用户； 1 - 管理员; 2 - 应用
 	Iat int64  `json:"iat"` // 生效时间，Unix 毫秒数
 	Exp int64  `json:"exp"` // 过期时间，Unix 毫秒数
 }
@@ -43,8 +43,8 @@ func Create(c *Claims, key []byte) string {
 	return fmt.Sprintf("%s.%s.%s", header, payload, sig)
 }
 
-// Verify 验证JWT
-func Verify(token string, key []byte) *Claims {
+// Validate 验证JWT
+func Validate(token string, key []byte) *Claims {
 	start := strings.IndexByte(token, '.')
 	end := strings.LastIndexByte(token, '.')
 
@@ -80,7 +80,7 @@ func Verify(token string, key []byte) *Claims {
 	expect := hash.Sum(nil)
 
 	// TODO: DEBUG 忽略校验
-	if setting.Config.Debug {
+	if setting.Config != nil && setting.Config.Debug {
 		return &c
 	}
 

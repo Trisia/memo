@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"memo-core/controller/midd"
 	"memo-core/objstore"
 	"net/http"
 	"os"
@@ -14,8 +15,8 @@ func NewDocAssetController(r gin.IRouter) *DocAssetController {
 	res := &DocAssetController{}
 	base := r.Group("doc")
 	// 上传文档资源
-	base.POST(":id/asset", res.putAsset)
-	// 下载文档资源
+	base.POST(":id/asset", midd.Entity, res.putAsset)
+	// 下载文档资源（匿名）
 	base.GET(":id/asset/:filename", res.getAsset)
 	return res
 }

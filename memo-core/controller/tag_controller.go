@@ -3,13 +3,14 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
+	"memo-core/controller/midd"
 	"memo-core/repo"
 	"memo-core/repo/entity"
 )
 
 func NewTagController(r gin.IRouter) *TagController {
 	res := &TagController{}
-	base := r.Group("tag")
+	base := r.Group("tag", midd.Entity)
 	base.POST("", res.create)
 	return res
 }

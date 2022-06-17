@@ -14,7 +14,7 @@ type User struct {
 	Email     string    `gorm:"type:varchar(256)" json:"email"`
 	Password  string    `gorm:"type:varchar(256)" json:"password"`
 	Salt      string    `gorm:"type:varchar(256)" json:"-"`
-	Typ       int       `gorm:"type:tinyint" json:"typ"` // 用户类型 0 - 普通用户； 1 - 管理员
+	Typ       int       `gorm:"type:tinyint" json:"typ"` // 用户类型 0 - 普通用户； 1 - 管理员; 2 - 应用
 }
 
 type user struct {

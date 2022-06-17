@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"memo-core/controller/dto"
+	"memo-core/controller/midd"
 	"memo-core/repo"
 	"memo-core/repo/entity"
 	"strconv"
@@ -16,7 +17,8 @@ type DocController struct {
 
 func NewDocController(r gin.IRouter) *DocController {
 	res := &DocController{}
-	base := r.Group("doc")
+	// Doc 要求实体认证
+	base := r.Group("doc", midd.Entity)
 	// 创建或更新文档内容
 	base.POST("", res.save)
 	// 删除文档

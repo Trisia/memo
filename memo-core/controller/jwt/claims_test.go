@@ -13,9 +13,8 @@ func TestVerify(t *testing.T) {
 
 	jwt := Create(&c, key)
 
-	cc := Verify(jwt, key)
+	cc := Validate(jwt, key)
 	if cc == nil {
 		t.Fatal("验证应该通过，但是不通过")
 	}
-
 }

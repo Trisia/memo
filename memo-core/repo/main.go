@@ -39,7 +39,7 @@ func Init(config setting.Database) error {
 	}
 	var err error
 	opts := &gorm.Config{DisableForeignKeyConstraintWhenMigrating: true}
-	if setting.Config.Debug {
+	if setting.Config != nil && setting.Config.Debug {
 		// 打印DEBUG日志
 		opts.Logger = logger.Default.LogMode(logger.Info)
 	}
