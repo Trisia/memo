@@ -3,6 +3,7 @@ package filesys
 import (
 	"fmt"
 	"github.com/tjfoc/gmsm/sm3"
+	"go.uber.org/zap"
 	"io"
 	"os"
 	"path/filepath"
@@ -113,12 +114,16 @@ func (f *FileSystemBaseOSS) Del(docId, hashName string) error {
 	if hashName == "" {
 		return nil
 	}
-	return os.Remove(filepath.Join(f.base, docId, hashName))
+	p := filepath.Join(f.base, docId, hashName)
+	zap.L().Debug("删除文件对象", zap.String("file", p))
+	return os.Remove(p)
 }
 
 func (f FileSystemBaseOSS) DelDoc(docId string) error {
 	if docId == "" {
 		return nil
 	}
-	return os.RemoveAll(filepath.Join(f.base, docId))
+	p := filepath.Join(f.base, docId)
+	zap.L().Debug("删除文档关联所有资源", zap.String("file", p))
+	return os.RemoveAll(p)
 }
