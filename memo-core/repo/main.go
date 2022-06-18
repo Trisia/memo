@@ -15,11 +15,13 @@ import (
 var DB *gorm.DB
 
 var (
-	UserSvc *UserRepo
+	UserSvc      *UserRepo
+	DocTagAggSvc *DocTagAggRepo
 )
 
 func register() {
 	UserSvc = NewUserRepo()
+	DocTagAggSvc = NewDocTagAggRepo()
 }
 
 // Init 初始化数据库连接服务

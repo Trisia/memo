@@ -6,6 +6,7 @@ import (
 	"gorm.io/gorm"
 	"memo-core/controller/dto"
 	"memo-core/controller/midd"
+	"memo-core/objstore"
 	"memo-core/repo"
 	"memo-core/repo/entity"
 	"strconv"
@@ -40,6 +41,8 @@ func NewDocController(r gin.IRouter) *DocController {
 @apiParam {Integer} [id] 文档ID，ID存在时为更新
 @apiParam {String} title 文档标题
 @apiParam {String} [content] 文档内容
+@apiParam {Integer[]} [tags] 文档关联的标签序列
+@apiParam {String[]} [deleteImg] 待删除的图片名称序列
 
 @apiParamExample {json} 创建
 {
@@ -64,7 +67,7 @@ HTTP/1.1 400
 文档内容(content)为空
 */
 func (c *DocController) save(ctx *gin.Context) {
-	var param entity.Document
+	var param dto.DocSaveParam
 	if err := ctx.ShouldBindJSON(&param); err != nil {
 		ErrIllegal(ctx, "无法解析参数")
 		return
@@ -75,17 +78,19 @@ func (c *DocController) save(ctx *gin.Context) {
 		return
 	}
 
-	var err error
-	// 创建
-	if param.ID <= 0 {
-		err = repo.DB.Save(&param).Error
-	} else {
-		err = repo.DB.Model(&param).Select("title", "content").Updates(param).Error
-	}
+	err := repo.DocTagAggSvc.Save(&param.Document, param.Tags)
 	if err != nil {
 		ErrSys(ctx, err)
 		return
 	}
+	docId := fmt.Sprintf("%d", param.ID)
+	if len(param.DeleteImg) > 0 {
+		// 依次删除图片
+		for _, imgFileName := range param.DeleteImg {
+			_ = objstore.Repo.Del(docId, imgFileName)
+		}
+	}
+
 	ctx.JSON(200, param.ID)
 }
 

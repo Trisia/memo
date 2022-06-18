@@ -63,12 +63,16 @@ func Validate(token string, key []byte) *Claims {
 		return nil
 	}
 
+	// TODO: DEBUG 忽略校验
+	if setting.Config != nil && setting.Config.Debug {
+		return &c
+	}
+
 	now := time.Now().UnixMilli()
 	if now >= c.Exp {
 		// 过期
 		return nil
 	}
-
 	// 校验HMAC
 	plaintext := []byte(token[:end])
 	actual, err := base64.RawURLEncoding.DecodeString(token[end+1:])
@@ -78,11 +82,6 @@ func Validate(token string, key []byte) *Claims {
 	hash := hmac.New(sm3.New, key)
 	hash.Write(plaintext)
 	expect := hash.Sum(nil)
-
-	// TODO: DEBUG 忽略校验
-	if setting.Config != nil && setting.Config.Debug {
-		return &c
-	}
 
 	if !bytes.Equal(expect, actual) {
 		return nil
