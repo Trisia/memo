@@ -1,1 +1,1 @@
-apidoc -i controller/ -d~o target/MemoAPI
+apidoc -i controller/ -o target/MemoAPI

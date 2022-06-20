@@ -146,7 +146,7 @@ GET /doc/1
 @apiSuccess {String} updatedAt 更新时间，YYYY-MM-DD HH:mm:ss
 @apiSuccess {Integer} creator 文档所属用户ID
 
-@apiSuccessExample {HTTP} 成功响应
+@apiSuccessExample {json} 成功响应
 HTTP/1.1 200
 
 {
@@ -203,7 +203,7 @@ GET /doc/search?size=5&after=12&keyword=标题
 @apiSuccess {String} Doc.updatedAt 更新时间，YYYY-MM-DD HH:mm:ss
 @apiSuccess {Integer} Doc.creator 文档所属用户ID
 
-@apiSuccessExample {HTTP} 成功响应
+@apiSuccessExample {json} 成功响应
 HTTP/1.1 200
 
 [

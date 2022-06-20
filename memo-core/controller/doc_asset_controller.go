@@ -25,7 +25,7 @@ type DocAssetController struct {
 }
 
 /**
-@api {PUT} /api/doc/:id/asset 上传资源
+@api {POST} /api/doc/:id/asset 上传资源
 @apiDescription 上传于文档的资源，如：图片、文档等
 @apiName DocPutAsset
 @apiGroup Doc
