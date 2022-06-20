@@ -2,17 +2,19 @@
   "name": "memo-ui",
   "private": true,
   "version": "1.0.0",
-  "description":"Memo笔记系统前端UI",
+  "description": "Memo笔记系统前端UI",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.2.25"
+    "axios": "^0.27.2",
+    "vue": "^3.2.25",
+    "vue-router": "^4.0.16"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.3.3",
-    "vite": "^2.9.9"
+    "vite": "^2.9.12"
   }
 }
