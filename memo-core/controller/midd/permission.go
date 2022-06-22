@@ -28,7 +28,7 @@ func BuildPermissionMid(types ...uint) gin.HandlerFunc {
 				return
 			}
 		}
-		ctx.AbortWithStatus(http.StatusUnauthorized)
+		ctx.AbortWithStatus(http.StatusForbidden)
 		return
 	}
 }
