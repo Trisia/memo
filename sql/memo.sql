@@ -7,8 +7,9 @@ CREATE TABLE users
     username   VARCHAR(64), 
     email      VARCHAR(256), 
     `password` VARCHAR(256), 
-    salt       VARCHAR(256)
-
+    salt       VARCHAR(256),
+    typ        TINYINT, -- 用户类型： 0 - 普通用户；1 - 管理员；2 - 引用
+    avatar     BLOB     -- 头像
 );
 
 
