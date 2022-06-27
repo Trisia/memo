@@ -4,6 +4,8 @@ import router from './router'
 import 'element-plus/dist/index.css'
 import useInterceptor from './useInterceptor.js'
 
+
 useInterceptor();
 
-createApp(App).use(router).mount('#app')
+const app = createApp(App);
+app.use(router).mount('#app')

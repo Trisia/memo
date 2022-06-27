@@ -67,7 +67,7 @@ const handleLogin = () => {
         password: password.value,
     }).then(({ data }) => {
         localStorage.setItem('token', data);
-        router.replace("/home")
+        router.replace("/main")
     }).catch((err) => {
         ElMessage.error(err.response.data)
     }).finally(() => {
