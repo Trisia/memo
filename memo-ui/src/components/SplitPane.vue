@@ -5,6 +5,14 @@ const props = defineProps({
     layout: {
         type: String,
         default: '',
+    },
+    min: {
+        type: Number,
+        default: 150,
+    },
+    max: {
+        type: Number,
+        default: 0,
     }
 })
 const isVertical = computed(() => props.layout === 'vertical')
@@ -14,12 +22,19 @@ const container = ref()
 
 const state = reactive({
     dragging: false,
-    split: 50
+    split: props.min
 })
 
 const boundSplit = computed(() => {
-    const { split } = state
-    return split < 20 ? 20 : split > 80 ? 80 : split
+    const { split } = state;
+    if (split < props.min) {
+        return props.min;
+    }
+
+    if (props.max > 0 && split > props.max) {
+        return props.max;
+    }
+    return split;
 })
 
 let startPosition = 0
@@ -34,11 +49,8 @@ function dragStart(e) {
 function dragMove(e) {
     if (state.dragging) {
         const position = isVertical.value ? e.pageY : e.pageX
-        const totalSize = isVertical.value
-            ? container.value.offsetHeight
-            : container.value.offsetWidth
         const dp = position - startPosition
-        state.split = startSplit + ~~((dp / totalSize) * 100)
+        state.split = startSplit + dp;
     }
 }
 
@@ -52,11 +64,11 @@ function dragEnd() {
         dragging: state.dragging,
         vertical: isVertical
     }" @mousemove="dragMove" @mouseup="dragEnd" @mouseleave="dragEnd">
-        <div class="left" :style="{ [isVertical ? 'height' : 'width']: boundSplit + '%' }">
+        <div class="left" :style="{ [isVertical ? 'height' : 'width']: boundSplit + 'px' }">
             <slot name="left" />
             <div class="dragger" @mousedown.prevent="dragStart" />
         </div>
-        <div class="right" :style="{ [isVertical ? 'height' : 'width']: 100 - boundSplit + '%' }">
+        <div class="right">
             <slot name="right" />
         </div>
     </div>
@@ -78,11 +90,19 @@ function dragEnd() {
     pointer-events: none;
 }
 
-.left,
+.left {
+    position: relative;
+    height: 100%;
+    border-right: 1px solid #D4D7DE;
+}
+
 .right {
     position: relative;
     height: 100%;
+    width: 100%;
+    flex: 1;
 }
+
 
 .left {
     border-right: 1px solid #D4D7DE;

@@ -1,7 +1,7 @@
 <template>
-    <split-pane style="height:100%">
+    <split-pane  :min="600" style="height:100%">
         <template v-slot:left>
-            <split-pane>
+            <split-pane :min="250">
                 <template v-slot:left>
                     <div>AAA</div>
                 </template>
