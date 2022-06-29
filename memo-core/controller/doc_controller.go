@@ -198,7 +198,7 @@ GET /doc/search?size=5&after=12&keyword=标题
 @apiSuccess {Doc[]} Body 文档数据
 @apiSuccess {Integer} Doc.id 文档ID
 @apiSuccess {String} Doc.title 文档标题
-@apiSuccess {String} Doc.content 文档内容
+@apiSuccess {String} Doc.brief 摘要
 @apiSuccess {String} Doc.createdAt 创建时间，YYYY-MM-DD HH:mm:ss
 @apiSuccess {String} Doc.updatedAt 更新时间，YYYY-MM-DD HH:mm:ss
 @apiSuccess {Integer} Doc.creator 文档所属用户ID
@@ -211,7 +211,7 @@ HTTP/1.1 200
         "id": 2,
         "creator": 7,
         "title": "文档1",
-        "content": "# 标题",
+		"brief": "",
         "createdAt": "2022-06-11 20:01:45",
         "updatedAt": "2022-06-11 20:01:45"
     },
@@ -219,7 +219,7 @@ HTTP/1.1 200
         "id": 1,
         "creator": 7,
         "title": "标题2",
-        "content": "# 标题2",
+		"brief": "",
         "createdAt": "2022-06-09 22:23:49",
         "updatedAt": "2022-06-11 19:12:37"
     }
@@ -244,6 +244,7 @@ func (c *DocController) search(ctx *gin.Context) {
 	userId := ctx.GetUint("userId")
 
 	tx := repo.DB.
+		Select("id, created_at, updated_at, creator, title, brief").
 		Limit(param.Limit).
 		Offset(param.Offset).
 		Order("created_at desc").

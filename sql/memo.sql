@@ -21,7 +21,8 @@ CREATE TABLE documents
     updated_at DATETIME,
     creator    BIGINT, 
     title      VARCHAR(256), 
-    content    TEXT
+    content    TEXT,
+    brief      VARCHAR(516)
 );
 
 
