@@ -7,7 +7,7 @@ export default function () {
             // 判断token是否存在
             if (localStorage.getItem('token')) { 
                 // 将token设置成请求头
-                config.headers.Token = localStorage.getItem('token');  
+                config.headers.token = localStorage.getItem('token');  
             }
             return config;
         },

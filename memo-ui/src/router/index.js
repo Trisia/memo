@@ -1,7 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 
 import Login from "../view/Login.vue"
-import Main from "../view/Main.vue"
+import Main from "../view/Main/Main.vue"
 import UserRegister from "../view/UserRegister.vue"
 
 const routes = [

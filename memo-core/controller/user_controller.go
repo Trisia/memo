@@ -175,7 +175,6 @@ HTTP/1.1 200 OK
     "updatedAt": "2022-06-29T20:54:10.15+08:00",
     "username": "test",
     "email": "test@email.com",
-    "password": "9501611ee51cdc4dc3386c9788f72b273abb3325f951383a8e4b6c34a85712ac",
     "typ": 0,
     "avatar": null
 }
@@ -187,7 +186,8 @@ func (c *UserController) info(ctx *gin.Context) {
 		ErrSys(ctx, err)
 		return
 	}
-
+	res.Password = ""
+	res.Salt = ""
 	ctx.JSON(200, res)
 }
 

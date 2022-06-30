@@ -192,6 +192,7 @@ func (c *DocController) get(ctx *gin.Context) {
 @apiParam {Integer} [limit=30] 本次查询返回最大记录数记录。
 @apiParam {Integer} [offset=0] 偏移量
 @apiParam {String} [keyword] 标题关键字
+@apiParam {Integer} [tagId] 标签ID
 @apiParamExample {HTTP} 删除
 GET /doc/search?size=5&after=12&keyword=标题
 
@@ -242,7 +243,7 @@ func (c *DocController) search(ctx *gin.Context) {
 		param.Offset = 0
 	}
 	userId := ctx.GetUint("userId")
-
+	// TODO: 标签
 	tx := repo.DB.
 		Select("id, created_at, updated_at, creator, title, brief").
 		Limit(param.Limit).
