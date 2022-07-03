@@ -32,7 +32,7 @@ const emit = defineEmits(['update:modelValue', "blur"])
 const inputCss = computed(() => {
     let res = ['gg-input'];
     if (props.err) {
-        res.push('err');
+        res = ['gg-input', 'err'];
     }
     return res;
 })

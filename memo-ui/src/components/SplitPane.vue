@@ -1,5 +1,21 @@
+
+<template>
+    <div class="split-pane" :class="{
+        dragging: state.dragging,
+        vertical: isVertical
+    }" @mousemove="dragMove" @mouseup="dragEnd" @mouseleave="dragEnd">
+        <div class="left" :style="{ [isVertical ? 'height' : 'width']: boundSplit + 'px' }">
+            <slot name="left" />
+            <div class="dragger" @mousedown.prevent="dragStart" />
+        </div>
+        <div class="right">
+            <slot name="right" />
+        </div>
+    </div>
+</template>
+
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { reactive, computed } from 'vue'
 
 const props = defineProps({
     layout: {
@@ -17,13 +33,7 @@ const props = defineProps({
 })
 const isVertical = computed(() => props.layout === 'vertical')
 
-const container = ref()
-
-
-const state = reactive({
-    dragging: false,
-    split: props.min
-})
+const state = reactive({ dragging: false, split: props.min })
 
 const boundSplit = computed(() => {
     const { split } = state;
@@ -58,22 +68,6 @@ function dragEnd() {
     state.dragging = false
 }
 </script>
-
-<template>
-    <div ref="container" class="split-pane" :class="{
-        dragging: state.dragging,
-        vertical: isVertical
-    }" @mousemove="dragMove" @mouseup="dragEnd" @mouseleave="dragEnd">
-        <div class="left" :style="{ [isVertical ? 'height' : 'width']: boundSplit + 'px' }">
-            <slot name="left" />
-            <div class="dragger" @mousedown.prevent="dragStart" />
-        </div>
-        <div class="right">
-            <slot name="right" />
-        </div>
-    </div>
-</template>
-
 <style scoped>
 .split-pane {
     display: flex;

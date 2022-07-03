@@ -1,9 +1,10 @@
 <template>
-    <split-pane :min="600" style="height:100%">
+    <split-pane :min="600" style="height: 100%;">
         <template v-slot:left>
             <split-pane :min="250">
                 <template v-slot:left>
-                    <div style="height: 100%; background-color: #f3f4f6; padding: 15px;" v-loading="userArealoading">
+                    <div style="height: 100%;box-sizing: border-box;background-color: #f3f4f6; padding: 15px;"
+                        v-loading="userArealoading">
                         <div style="padding: 30px 15px 30px 15px;text-align: center;">
                             <img style=" border-radius: 50%;" width="90" height="90" :src="userInfo.avatar" alt="">
                             <div style="margin: 5px;font-weight: 600; font-size: 18px">{{ userInfo.username }}</div>
@@ -26,18 +27,33 @@
                     </div>
                 </template>
                 <template v-slot:right>
-                    <div style="padding: 15px">
-                        <el-input v-model="docParam.keyword" @keydown.enter="handlerSearchDoc" :prefix-icon="Search"
-                            placeholder="搜索您的内容"></el-input>
-                    </div>
-                    <div style="padding: 10px 10px 0 10px;height: 100%; overflow: auto;"
-                        v-infinite-scroll="handlerDocLAppendLoad" v-loading="docListArealoading">
-                        <div v-for="item in docArr" :key="item.id" class="doc-item"
-                            :class="{ 'doc-item-active': item.id == selectedDocId }" @click="handleSelectDoc(item)">
-                            doc
+                    <div style="height: 100%;box-sizing: border-box;display: flex;flex-direction: column;">
+
+                        <div style="padding: 15px">
+                            <el-input v-model="docParam.keyword" @keydown.enter="handlerSearchDoc" :prefix-icon="Search"
+                                placeholder="搜索您的内容"></el-input>
                         </div>
-                        <div v-if="docPullNewLoading" style="margin-top:45px" v-loading="docPullNewLoading"> </div>
-                        <div style="margin-top:15px; text-align: center;">已经到底了</div>
+                        <div class="infinite-list-wrapper" v-infinite-scroll="handlerDocLAppendLoad"
+                            :infinite-scroll-immediate="true" :infinite-scroll-disabled="disabledScroll"
+                            v-loading="docListArealoading">
+                            <el-scrollbar>
+                                <div v-for="item in docArr" :key="item.id" class="doc-item"
+                                    :class="{ 'doc-item-active': item.id == selectedDocId }"
+                                    @click="handleSelectDoc(item)">
+                                    <div style="font-size: 18px;">{{ item.title }}</div>
+                                    <div class="doc-item-brief">
+                                        {{ item.brief ? item.brief : "无描述" }}
+                                    </div>
+                                    <div style="margin-top: 10px;font-size: 12px;color:#909399;">创建于 {{ item.createdAt
+                                    }}
+                                    </div>
+                                </div>
+                                <div v-if="docPullNewLoading" style="margin-top:45px" v-loading="docPullNewLoading">
+                                </div>
+                                <div style="margin:15px; text-align: center;">已经到底了</div>
+                            </el-scrollbar>
+                        </div>
+
                     </div>
                 </template>
             </split-pane>
@@ -49,7 +65,7 @@
 </template>
 <script setup>
 import axios from 'axios';
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive, ref, computed } from 'vue';
 import SplitPane from '../../components/SplitPane.vue'
 import avatar from '../../assets/avatar.png'
 import { ElMessage } from 'element-plus'
@@ -61,6 +77,8 @@ const docPullNewLoading = ref(false);
 const noMoreDoc = ref(false);
 
 const selectedDocId = ref(0);
+const disabledScroll = computed(() => docPullNewLoading.value || noMoreDoc.value)
+
 
 // 已经被选中的文档标签
 const selectedTag = reactive({ id: 0, name: "", count: 0 })
@@ -87,8 +105,8 @@ onMounted(() => {
     userArealoading.value = true;
     getUserInfo();
     getTags();
-    docListArealoading.value = true;
-    handlerSearchDoc();
+
+    // handlerSearchDoc();
 });
 
 
@@ -136,34 +154,27 @@ const handleSelectTag = (item) => {
     }
 }
 
-
 // 搜索文档
 const handlerSearchDoc = () => {
-    let param = `?offset=${docParam.offset}&limit=${docParam.limit}`;
+    let param = `?offset=0&limit=${docParam.limit}`;
     if (docParam.keyword) {
         param += "&keyword=" + docParam.keyword.trim();
     }
     if (selectedTag.id > 0) {
         param += "&tagId=" + selectedTag.id;
-
     }
+    docListArealoading.value = true;
     axios.get("./api/doc/search" + param).then(({ data }) => {
         docArr.value = data;
     }).catch((err) => {
         ElMessage.error(err.response.data)
     }).finally(() => {
         docListArealoading.value = false;
-    })
+    });
 }
 
 const handlerDocLAppendLoad = () => {
-    if (noMoreDoc.value) {
-        // 已经到底了
-        return;
-    }
-
     docPullNewLoading.value = true;
-    docParam.offset += docParam.limit;
     let param = `?offset=${docParam.offset}&limit=${docParam.limit}`;
     if (docParam.keyword) {
         param += "&keyword=" + docParam.keyword.trim();
@@ -174,22 +185,23 @@ const handlerDocLAppendLoad = () => {
     }
     axios.get("./api/doc/search" + param).then(({ data }) => {
         for (let i = 0; i < data.length; i++) {
-            docArr.push(data[i]);
+            docArr.value.push(data[i]);
         }
         if (data.length < docParam.limit) {
             noMoreDoc.value = true;
         }
+        docParam.offset += docParam.limit;
     }).catch((err) => {
         ElMessage.error(err.response.data)
     }).finally(() => {
         docPullNewLoading.value = false;
-    })
+    });
 }
 
 
 // 选中文档时
 const handleSelectDoc = (item) => {
-    //TODO: 文档变更
+    // TODO: 文档变更
     selectedDocId.value = item.id;
 }
 
@@ -225,9 +237,14 @@ body {
     font-weight: 600;
 }
 
+.infinite-list-wrapper {
+    overflow: auto;
+    flex: 1;
+}
+
 .doc-item {
     border-bottom: 1px solid #E4E7ED;
-    padding: 10px
+    padding: 10px 20px;
 }
 
 .doc-item:hover {
@@ -237,5 +254,14 @@ body {
 .doc-item-active {
     background-color: #f3f4f6;
     color: #50a6ff;
+}
+
+.doc-item-brief {
+    padding-top: 10px;
+    width: 300px;
+    color: #606266;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 </style>
