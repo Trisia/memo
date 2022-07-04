@@ -27,15 +27,13 @@
                     </div>
                 </template>
                 <template v-slot:right>
-                    <div style="height: 100%;box-sizing: border-box;display: flex;flex-direction: column;">
-
+                    <div class="vertical-flex" v-loading="docListArealoading">
                         <div style="padding: 15px">
                             <el-input v-model="docParam.keyword" @keydown.enter="handlerSearchDoc" :prefix-icon="Search"
                                 placeholder="搜索您的内容"></el-input>
                         </div>
-                        <div class="infinite-list-wrapper" v-infinite-scroll="handlerDocLAppendLoad"
-                            :infinite-scroll-immediate="true" :infinite-scroll-disabled="disabledScroll"
-                            v-loading="docListArealoading">
+                        <div v-if="isMounted" class="infinite-list-wrapper" v-infinite-scroll="handlerDocLAppendLoad"
+                            :infinite-scroll-disabled="disabledScroll">
                             <el-scrollbar>
                                 <div v-for="item in docArr" :key="item.id" class="doc-item"
                                     :class="{ 'doc-item-active': item.id == selectedDocId }"
@@ -48,7 +46,7 @@
                                     }}
                                     </div>
                                 </div>
-                                <div v-if="docPullNewLoading" style="margin-top:45px" v-loading="docPullNewLoading">
+                                <div v-show="docPullNewLoading" style="margin-top:45px" v-loading="docPullNewLoading">
                                 </div>
                                 <div style="margin:15px; text-align: center;">已经到底了</div>
                             </el-scrollbar>
@@ -59,13 +57,21 @@
             </split-pane>
         </template>
         <template v-slot:right>
-            <div>CC</div>
+            <div class="vertical-flex">
+                <div style="margin: 10px 25px; display: flex;">
+                    <el-input style="margin-right: 5px;" placeholder="请输入文章标题（3~100个字）">标题</el-input>
+                    <el-button>保存</el-button>
+                </div>
+                <!-- <div style="overflow: auto;flex: 1;">
+                    <milk-down-editor ></milk-down-editor>
+                </div> -->
+            </div>
         </template>
     </split-pane>
 </template>
 <script setup>
 import axios from 'axios';
-import { onMounted, reactive, ref, computed } from 'vue';
+import { onMounted, reactive, ref, computed, onUnmounted } from 'vue';
 import SplitPane from '../../components/SplitPane.vue'
 import avatar from '../../assets/avatar.png'
 import { ElMessage } from 'element-plus'
@@ -100,13 +106,13 @@ var userInfo = reactive({
 
 const docTagArr = ref([]);
 const docArr = ref([]);
+const isMounted = ref(false);
 
 onMounted(() => {
     userArealoading.value = true;
     getUserInfo();
     getTags();
-
-    // handlerSearchDoc();
+    isMounted.value = true
 });
 
 
@@ -181,7 +187,6 @@ const handlerDocLAppendLoad = () => {
     }
     if (selectedTag.id > 0) {
         param += "&tagId=" + selectedTag.id;
-
     }
     axios.get("./api/doc/search" + param).then(({ data }) => {
         for (let i = 0; i < data.length; i++) {
@@ -207,7 +212,7 @@ const handleSelectDoc = (item) => {
 
 </script>
 
-<style>
+<style scoped>
 html,
 body {
     height: 100%;
@@ -263,5 +268,12 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.vertical-flex {
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
 }
 </style>

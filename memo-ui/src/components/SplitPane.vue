@@ -30,7 +30,8 @@ const props = defineProps({
         type: Number,
         default: 0,
     }
-})
+});
+
 const isVertical = computed(() => props.layout === 'vertical')
 
 const state = reactive({ dragging: false, split: props.min })
