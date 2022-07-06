@@ -3,49 +3,15 @@
 </template>
 
 <script setup>
-import { Editor, rootCtx, defaultValueCtx, ThemeIcon } from "@milkdown/core";
+import { Editor, rootCtx, defaultValueCtx } from "@milkdown/core";
 import { nord } from "@milkdown/theme-nord";
 import { VueEditor, useEditor } from "@milkdown/vue";
 import { commonmark } from "@milkdown/preset-commonmark";
 import { emoji } from "@milkdown/plugin-emoji";
 import { history } from '@milkdown/plugin-history';
 import { tooltip } from '@milkdown/plugin-tooltip';
-import { menu, menuPlugin, defaultConfig } from "@milkdown/plugin-menu";
-// import { getIcon } from "./icon.js";
+import { menu } from "@milkdown/plugin-menu";
 
-
-// const myMenu = menu.configure(menuPlugin, {
-//     config: defaultConfig.map((section) => {
-//         return section.map((item) => {
-//             if (item.type !== 'select') return item;
-
-//             switch (item.text) {
-//                 case 'Heading': {
-//                     return {
-//                         ...item,
-//                         text: '<heading selection>',
-//                         options: [
-//                             { id: '1', text: '<text for h1>' },
-//                             { id: '2', text: '<text for h2>' },
-//                             { id: '3', text: '<text for h3>' },
-//                             { id: '0', text: '<text for paragraph>' },
-//                         ],
-//                     };
-//                 }
-//                 default:
-//                     return item;
-//             }
-//         });
-//     }),
-// });
-
-// const theme = nord.override((emotion, manager) => {
-//     manager.set(ThemeIcon, (icon) => {
-//         if (!icon) return;
-
-//         return getIcon(icon);
-//     });
-// });
 
 const { editor } = useEditor((root) =>
     Editor.make()
@@ -63,8 +29,6 @@ const { editor } = useEditor((root) =>
 
 </script>
 <style>
-
-/* fallback */
 @font-face {
   font-family: 'Material Icons Outlined';
   font-style: normal;
