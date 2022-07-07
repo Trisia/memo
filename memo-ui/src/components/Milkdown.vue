@@ -1,30 +1,62 @@
 <template>
-    <VueEditor :editor="editor" />
+  <VueEditor :editor="editor" />
 </template>
 
 <script setup>
+import 'katex/dist/katex.min.css';
 import { Editor, rootCtx, defaultValueCtx } from "@milkdown/core";
 import { nord } from "@milkdown/theme-nord";
 import { VueEditor, useEditor } from "@milkdown/vue";
-import { commonmark } from "@milkdown/preset-commonmark";
 import { emoji } from "@milkdown/plugin-emoji";
 import { history } from '@milkdown/plugin-history';
 import { tooltip } from '@milkdown/plugin-tooltip';
-import { menu } from "@milkdown/plugin-menu";
+import { menu, menuPlugin, defaultConfig } from "@milkdown/plugin-menu";
+import { listener, listenerCtx } from '@milkdown/plugin-listener';
+import { gfm } from '@milkdown/preset-gfm';
 
+// const myMenu = menu.configure(menuPlugin, {
+//   config: defaultConfig.map((section) => {
+//     return section.map((item) => {
+//       console.log(item);
+//       if (item.type == 'select') {
+//         item.text = '标题';
+//         item.options = [
+//           { id: '0', text: '正文' },
+//           { id: '1', text: '标题 1' },
+//           { id: '2', text: '标题 2' },
+//           { id: '3', text: '标题 3' },
+//           { id: '4', text: '标题 4' },
+//         ];
+//       }
+//       switch (item.type) {
+//         case 'select':
+
+//           break;
+//         case 'undo':
+//           item.key = "撤销";
+//           break;
+//       }
+//       return item;
+//     });
+//   }),
+// });
 
 const { editor } = useEditor((root) =>
-    Editor.make()
-        .config((ctx) => {
-            ctx.set(rootCtx, root);
-            ctx.set(defaultValueCtx, "# Milkdown 💖 Vue");
-        })
-        .use(nord)
-        .use(emoji)
-        .use(commonmark)
-        .use(history)
-        .use(menu)
-        .use(tooltip)
+  Editor.make()
+    .config((ctx) => {
+      ctx.set(rootCtx, root);
+      ctx.set(defaultValueCtx, "# Milkdown 💖 Vue");
+      ctx.get(listenerCtx).markdownUpdated((_, markdown) => {
+        console.log(">> markdownUpdated", markdown);
+      });
+    })
+    .use(gfm)
+    .use(nord)
+    .use(emoji)
+    .use(history)
+    .use(menu)
+    .use(tooltip)
+    .use(listener)
 );
 
 </script>
