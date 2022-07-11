@@ -9,6 +9,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@codemirror/autocomplete": "^6.0.4",
+    "@codemirror/commands": "^6.0.1",
+    "@codemirror/lang-markdown": "^6.0.0",
+    "@codemirror/language": "^6.2.0",
+    "@codemirror/lint": "^6.0.0",
+    "@codemirror/search": "^6.0.0",
+    "@codemirror/state": "^6.1.0",
+    "@codemirror/view": "^6.0.3",
     "@element-plus/icons-vue": "^2.0.6",
     "@milkdown/core": "^6.2.0",
     "@milkdown/plugin-emoji": "^6.2.0",
@@ -22,9 +30,11 @@
     "@milkdown/theme-nord": "^6.2.0",
     "@milkdown/vue": "^6.2.0",
     "axios": "^0.27.2",
+    "codemirror": "^6.0.1",
     "element-plus": "^2.2.8",
     "katex": "^0.16.0",
     "vue": "^3.2.25",
+    "vue-codemirror": "^6.0.0",
     "vue-router": "^4.0.16"
   },
   "devDependencies": {
